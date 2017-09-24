@@ -1,0 +1,55 @@
+{
+  "instruciones": [
+     {
+        "operation_type":"load",
+        "page":"https://stackoverflow.com/questions/1207457/convert-a-unicode-string-to-a-string-in-python-containing-extra-symbols",
+        "load_type":"post",
+        "params": {
+          "number": 12524,
+          "type": "issue",
+          "action": "show"
+        },
+        "headers":{
+          "Content-type": "application/x-www-form-urlencoded",
+          "Accept": "text/plain"
+
+       }
+    },
+    {
+
+      "operation_type":"loopload",
+      "tag":".linked .spacer a + a"
+
+    },
+    {
+
+      "operation_type":"extract",
+      "type":"text",
+      "regex": "",
+      "tag":"#question-header h1 a",
+      "save_var":"Name"
+
+    },
+    {
+
+      "operation_type":"extract",
+      "type":"attribute",
+      "regex": "",
+      "tag":"#question-header h1 a",
+      "save_var":"Link"
+
+    },
+    {
+
+      "operation_type":"extract",
+      "type":"text",
+      "regex": "",
+      "tag":"tr + tr td +td .label-key b",
+      "save_var":"Views"
+
+    },
+    {
+      "operation_type":"end"
+    }
+]
+}

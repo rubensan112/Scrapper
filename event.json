@@ -1,0 +1,52 @@
+[
+  {
+    "Link": "https://stackoverflow.com/questions/33504953/is-there-a-way-to-convert-unicode-to-the-nearest-ascii-equivalent",
+    "Name": "Is there a way to convert unicode to the nearest ASCII equivalent? [duplicate]",
+    "Views": "343 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/23578736/how-to-convert-unicode-that-im-getting-with-beautifulsoup",
+    "Name": "How to convert unicode that I'm getting with BeautifulSoup [duplicate]",
+    "Views": "274 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/17437843/how-to-convert-non-ascii-in-filename",
+    "Name": "How to convert non-ASCII in filename [duplicate]",
+    "Views": "70 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/42009482/how-to-map-a-unicode-character-to-a-corresponding-ascii",
+    "Name": "How to map a Unicode character to a \u201ccorresponding\u201d ASCII? [duplicate]",
+    "Views": "57 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/816285/where-is-pythons-best-ascii-for-this-unicode-database",
+    "Name": "Where is Python's \u201cbest ASCII for this Unicode\u201d database?",
+    "Views": "19,091 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/14664209/python-split-without-u",
+    "Name": "Python .split() without 'u",
+    "Views": "10,702 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/3669436/converting-unicode-objects-with-non-ascii-symbols-in-them-into-strings-objects",
+    "Name": "Converting Unicode objects with non-ASCII symbols in them into strings objects (in Python)",
+    "Views": "1,899 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/11396789/gae-typeerror-character-mapping-must-return-integer-none-or-unicode",
+    "Name": "GAE: TypeError: character mapping must return integer, None or unicode",
+    "Views": "4,070 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/17063502/python-strings-and-str-method-encoding-and-decoding",
+    "Name": "Python strings and str() method encoding and decoding",
+    "Views": "2,995 times"
+  },
+  {
+    "Link": "https://stackoverflow.com/questions/5829077/sqlalchemy-mapping-table-with-non-ascii-columns-to-class",
+    "Name": "SQLAlchemy mapping table with non-ascii columns to class",
+    "Views": "810 times"
+  }
+]

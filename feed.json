@@ -1,0 +1,613 @@
+{
+  "common": {
+    "proxies": [
+      {
+        "http": "http://jleiva:CGYFWmQr@23.106.164.9:29842",
+        "https": "http://jleiva:CGYFWmQr@23.106.164.9:29842"
+      },
+      {
+        "http": "http://jleiva:CGYFWmQr@23.82.80.123:29842",
+        "https": "http://jleiva:CGYFWmQr@23.82.80.123:29842"
+      },
+      {
+        "http": "http://jleiva:CGYFWmQr@23.106.164.48:29842",
+        "https": "http://jleiva:CGYFWmQr@23.106.164.48:29842"
+      },
+      {
+        "http": "http://jleiva:CGYFWmQr@23.82.80.137:29842",
+        "https": "http://jleiva:CGYFWmQr@23.82.80.137:29842"
+      },
+      {
+        "http": "http://jleiva:CGYFWmQr@23.106.164.200:29842",
+        "https": "http://jleiva:CGYFWmQr@23.106.164.200:29842"
+      }
+    ]
+  },
+  "input_var": {
+    "input_url": "vars"
+  },
+  "output_var": {
+    "common": {
+      "name": "",
+      "link": ""
+    },
+    "event": {
+      "starts": null,
+      "ends": null,
+      "place": "",
+      "venue": "",
+      "regions": null,
+      "areas": null,
+      "performers": null,
+      "taxonomies": null,
+      "keywords": null,
+      "images": null,
+      "estimated_performers": null,
+      "description": "",
+      "lang": "es",
+      "price": null,
+      "translations": null,
+      "sessions": null,
+      "raw_sessions": null,
+      "purchase_link": "",
+      "public_link": "",
+      "summary": null,
+      "feed_code": "santandercreativacom",
+      "url": ""
+    },
+    "place": {
+      "name": "",
+      "address": "",
+      "description": "",
+      "keywords": null,
+      "region_name": "",
+      "country_code": "ES",
+      "country_name": "Spain",
+      "latitude": "",
+      "longitude": "",
+      "location": null,
+      "feature_code": "",
+      "params": null,
+      "region_parent_name": "",
+      "link": "",
+      "region_level": "",
+      "lang": "es",
+      "translations": null,
+      "timezone": "Europe/Madrid"
+    },
+    "sessions": [],
+    "performers": [],
+    "store": {
+      "starts":"",
+      "ends":"",
+      "sessions":""
+    }
+  },
+  "steps": [
+    {
+      "name": "starter step",
+      "class_name": "Start",
+      "guid": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+      "next_guids": [
+        "00000000-0000-0000-0000-00000000000a"
+      ]
+    },
+     {
+      "name": "extract store.ends session",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000044",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000045"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": "div",
+        "save_var": "store.ends",
+        "path_extract_type": "plain_text",
+        "path_re": "\\s?(\\d{2}/\\d{2}/\\d{4}\\s).+?a\\s?(.\\d:\\d+)",
+        "in_scope": true
+      }
+    },
+    {
+      "name": "replace store.starts",
+      "class_name": "Evaluate",
+      "guid": "00000000-0000-0000-0000-000000000045",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000046"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "input_type": "store",
+        "input_name": "ends",
+        "output_var": "store.ends",
+        "operations": [
+          {
+            "operation_type": "replace",
+            "rdict": {
+              " 1": "01",
+              " 2": "02",
+              " 3": "03",
+              " 4": "04",
+              " 5": "05",
+              " 6": "06",
+              " 7": "07",
+              " 8": "08",
+              " 9": "09"
+            }
+          }
+        ]
+      }
+    },
+
+
+    {
+      "name": "add session",
+      "class_name": "AddSession",
+      "guid": "00000000-0000-0000-0000-000000000046",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000099"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "mode": "manual",
+        "starts": "store.starts",
+        "ends": "store.ends"
+      }
+    },
+
+    {
+      "name": "event tester",
+      "class_name": "LoadPage",
+      "guid": "00000000-0000-0000-0000-00000000000a",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000005"
+      ],
+      "error_handling": "raise",
+      "param": {
+        "url": "http://www.fundacionsantandercreativa.com/web/evento-auna/exposicion-antologica-cogi-unas-alas-y-voleramon-calderon-1932-2004.html",
+        "http_method": "get",
+        "js": false,
+        "save_var":"common.link"
+      }
+    },
+     {
+      "name": "loop through sessions",
+      "class_name": "Loop",
+      "guid": "00000000-0000-0000-0000-000000000005",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000000"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": "#horarios div:not([class=\"negro\"])"
+      }
+    },
+      {
+      "name": "load home",
+      "class_name": "LoadPage",
+      "guid": "00000000-0000-0000-0000-000000000001",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000002"
+      ],
+      "error_handling": "raise",
+      "param": {
+        "url": "https://www.fundacionsantandercreativa.com/web/calendario-de-eventos/",
+        "http_method": "get",
+        "js": false
+      }
+    },
+    {
+      "name": "iter categories",
+      "class_name": "LoopLoad",
+      "guid": "00000000-0000-0000-0000-000000000002",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000003"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".list_of_disciplinas a[href]:not([href*='index.html'])",
+        "path_extract_type": "attribute",
+        "path_extract_ref": "href",
+        "http_method": "get",
+        "js": true
+      }
+    },
+
+    {
+  "name": "iter pages",
+  "class_name": "Click",
+  "guid": "00000000-0000-0000-0000-000000000003",
+  "next_guids": [
+    "00000000-0000-0000-0000-000000000004"
+ ],
+  "error_handling": "ignore_and_continue",
+  "param": {
+    "path": "#next_links",
+    "recurrence": "recurrent",
+    "max_iter": 30,
+    "skip_first": true
+ }
+},
+    {
+      "name": "iter events",
+      "class_name": "LoopLoad",
+      "guid": "00000000-0000-0000-0000-000000000004",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000010"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".item_listed_content h2 a",
+        "path_extract_type": "attribute",
+        "path_extract_ref": "href",
+        "http_method": "get",
+        "js": true,
+        "max_iter": 5,
+        "skip_first": true
+      }
+    },
+    {
+      "name": "extract common.name",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000010",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000011"
+      ],
+      "error_handling": "go_to_end",
+      "param": {
+        "path": ".general_data h2",
+        "save_var": "common.name",
+        "path_extract_type": "plain_text"
+      }
+    },
+    {
+      "name": "extract event.starts",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000011",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000012"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".main_data",
+        "save_var": "event.starts",
+        "path_extract_type": "plain_text",
+        "path_re": "Desde\\s\\w+\\s(\\d{2}/\\d{2}/\\d{4})"
+      }
+    },
+
+    {
+      "name": "extract event.ends",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000012",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000013"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".main_data",
+        "save_var": "event.ends",
+        "path_extract_type": "plain_text",
+        "path_re": "hasta\\s(\\d{2}/\\d{2}/\\d{4})"
+      }
+    },
+    {
+      "name": "extract place.name",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000013",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000020"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".main_data",
+        "save_var": "place.name",
+        "path_extract_type": "plain_text",
+        "path_re": "Lugar:\\s+(.+\\w)\\s+Organiza:"
+      }
+    },
+    {
+      "name": "extract place.latitude",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000020",
+      "error_handling": "ignore_and_continue",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000021"
+      ],
+      "param": {
+        "path": "[alt=\"Compártelo en FaceBook\"] + a",
+        "save_var": "place.latitude",
+        "path_extract_type": "attribute",
+        "path_extract_ref": "href",
+        "path_re": "\\?q=(.?\\d+\\.\\d+),"
+      }
+    },
+    {
+      "name": "extract place.longitude",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000021",
+      "error_handling": "ignore_and_continue",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000022"
+      ],
+      "param": {
+        "path": "[alt=\"Compártelo en FaceBook\"] + a",
+        "save_var": "place.longitude",
+        "path_extract_type": "attribute",
+        "path_extract_ref": "href",
+        "path_re": "\\?q=.?\\d+\\.\\d+,(.?\\d+.\\d+)&"
+      }
+    },
+    {
+      "name": "extract event.description",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000022",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000030"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".container .content",
+        "save_var": "event.description",
+        "path_extract_type": "html",
+        "path_re": "^b'\\s*(.{0,4000}?)\\s*$|^\\s*(.{0,3999}\\.)"
+      }
+    },
+    {
+      "name": "strip tags",
+      "class_name": "Evaluate",
+      "guid": "00000000-0000-0000-0000-000000000030",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000031"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "input_type": "event",
+        "input_name": "description",
+        "output_var": "event.description",
+        "operations": [
+          {
+            "operation_type": "strip_tags"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Eliminate initial Space",
+      "class_name": "Evaluate",
+      "guid": "00000000-0000-0000-0000-000000000031",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000035"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "input_type": "event",
+        "input_name": "description",
+        "output_var": "event.description",
+        "operations": [
+          {
+            "operation_type": "regex",
+            "path_re":"^\\s*(.{0,4000}?)\\s*$|^\\s*(.{0,3999}\\.)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "extract sessions for future if",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000035",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000036"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": ".main_data + a:contains('Horarios')",
+        "save_var": "store.sessions",
+        "path_extract_type": "attribute",
+        "path_extract_ref": "href",
+        "path_re":"\\.\\.(.+)"
+      }
+    },
+    {
+  "name": "create path_absolute to sessions",
+  "class_name": "Evaluate",
+  "guid": "00000000-0000-0000-0000-000000000036",
+  "next_guids": [
+    "00000000-0000-0000-0000-000000000040"
+ ],
+  "error_handling": "ignore_and_continue",
+  "param": {
+    "input_type": "store",
+    "input_name": "sessions",
+    "output_var": "store.sessions",
+    "operations": [
+      {
+        "operation_type": "concatenate",
+        "concatenate": {
+          "concatenate_type": "plain_text",
+          "concatenate_text": "http://www.fundacionsantandercreativa.com/web/",
+          "variable_first": false
+ }
+      }
+
+    ]
+  }
+},
+
+    {
+      "name": "sessions exists?",
+      "class_name": "If",
+      "guid": "00000000-0000-0000-0000-000000000040",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000040",
+        "00000000-0000-0000-0000-000000000099"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "first_type": "var",
+        "first_term": "store.sessions",
+        "operation": "exist"
+      }
+    },
+
+   {
+      "name": "load sessions page",
+      "class_name": "LoadPage",
+      "guid": "00000000-0000-0000-0000-000000000040",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000041"
+      ],
+      "error_handling": "raise",
+      "param": {
+        "url_from_var":"store.sessions",
+        "http_method": "get",
+        "js": false
+      }
+    },
+
+    {
+      "name": "loop through sessions",
+      "class_name": "Loop",
+      "guid": "00000000-0000-0000-0000-000000000041",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000042"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": "#horarios div:not([class=\"negro\"])"
+      }
+    },
+    {
+      "name": "extract event.starts session",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000042",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000043"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": "div",
+        "save_var": "store.starts",
+        "path_extract_type": "plain_text",
+        "path_re": "\\s?(\\d{2}/\\d{2}/\\d{4}\\s)\\s*de\\s?(.\\d:\\d+)",
+        "in_scope": true
+      }
+    },
+    {
+      "name": "replace store.starts",
+      "class_name": "Evaluate",
+      "guid": "00000000-0000-0000-0000-000000000043",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000044"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "input_type": "store",
+        "input_name": "starts",
+        "output_var": "store.starts",
+        "operations": [
+          {
+            "operation_type": "replace",
+            "rdict": {
+              " 1": "01",
+              " 2": "02",
+              " 3": "03",
+              " 4": "04",
+              " 5": "05",
+              " 6": "06",
+              " 7": "07",
+              " 8": "08",
+              " 9": "09"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "extract store.ends session",
+      "class_name": "Extract",
+      "guid": "00000000-0000-0000-0000-000000000044",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000045"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "path": "div",
+        "save_var": "store.ends",
+        "path_extract_type": "plain_text",
+        "path_re": "\\s?(\\d{2}/\\d{2}/\\d{4}\\s).+?a\\s?(.\\d:\\d+)",
+        "in_scope": true
+      }
+    },
+    {
+      "name": "replace store.starts",
+      "class_name": "Evaluate",
+      "guid": "00000000-0000-0000-0000-000000000045",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000046"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "input_type": "store",
+        "input_name": "ends",
+        "output_var": "store.ends",
+        "operations": [
+          {
+            "operation_type": "replace",
+            "rdict": {
+              " 1": "01",
+              " 2": "02",
+              " 3": "03",
+              " 4": "04",
+              " 5": "05",
+              " 6": "06",
+              " 7": "07",
+              " 8": "08",
+              " 9": "09"
+            }
+          }
+        ]
+      }
+    },
+
+
+    {
+      "name": "add session",
+      "class_name": "AddSession",
+      "guid": "00000000-0000-0000-0000-000000000046",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000099"
+      ],
+      "error_handling": "ignore_and_continue",
+      "param": {
+        "mode": "manual",
+        "starts": "store.starts",
+        "ends": "store.ends"
+      }
+    },
+
+
+
+
+
+
+
+    {
+      "name": "return",
+      "class_name": "Return",
+      "guid": "00000000-0000-0000-0000-000000000099",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000000"
+      ],
+      "error_handling": "ignore_and_continue"
+    },
+    {
+      "name": "end",
+      "class_name": "End",
+      "guid": "00000000-0000-0000-0000-000000000000",
+      "next_guids": [
+        "00000000-0000-0000-0000-000000000000"
+      ]
+    }
+  ]
+}
