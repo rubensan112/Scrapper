@@ -10,6 +10,10 @@ import collections
 import urllib
 import httplib
 import copy
+import tools
+from cssselect import GenericTranslator, SelectorError
+import StringIO
+from lxml.etree import fromstring
 """
 def split_and_load(param):
     if param["http_method"] == "get":
@@ -62,7 +66,7 @@ class LoadPage(object):
         def split_and_load(param):
             if param["http_method"] == "get":
                 try:
-                    response = urllib2.urlopen(param["url"])
+                    response = urllib2.urlopen(param["url"]) #En el curro utilizan urllib.request
                     webContent = response.read()
                     return webContent
                 except:
@@ -96,11 +100,16 @@ class Loop(object):
         self.browser_copy = copy.deepcopy(browser)
         self.iter = 0
     def execute(self,step):
+        param = step['param']
 
         print("-------------------Executing %s -------------------" % (step["name"]))
-        browser_copy = self.browser_copy
-        feed_copy = self.feed_copy
-        result = [browser_copy,feed_copy]
+        if self.iter == 0:
+            next_guid = step['next_guids']
+            browser_copy = self.browser_copy
+            feed_copy = self.feed_copy
+        #if param['path']:
+
+        result = [browser_copy, feed_copy, next_guid]
 
         return result
 
@@ -118,24 +127,35 @@ class End(object):
 
 
 class Extract(object):
-    def __init__(self,config,var):
+    def __init__(self, config, browser):
         self.iter = 0
         self.config = config
-        self.var = var
-    def execute(self,config,browser):
-        url_data = url_data["param"]
-        browser = split_and_load(url_data)
-        return browser
+        self.browser = browser
+    def execute(self, step):
+        param = step['param']
+        try:
+            expression = GenericTranslator().css_to_xpath(param['path'])
+        except SelectorError:
+            print('Invalid selector')
+        parser = etree.HTMLParser()
+        tree = etree.parse(StringIO.StringIO(self.browser), parser)
+        #result = [e.get('href', 'None')for e in tree.xpath(expression)]
+        if param['path_extract_type'] == "plain_text":
+            result = [node.text for node in tree.xpath(expression)]
+        if param['path_extract_type'] == "attribute":
+            result = [node.get('param.path_extract_ref') for node in tree.xpath(expression)]
+        result = tools._byteify(result[0])
+        print(result)
+        return result
 
 class iter(object):
     def __init__(self,config,var):
         self.iter = 0
         self.config = config
         self.var = var
-        self.aux = aux
+
     def execute(self,config,browser):
-        url_data = url_data["param"]
-        browser = split_and_load(url_data)
+
         return browser
 
 

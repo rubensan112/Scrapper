@@ -18,9 +18,12 @@ def run_step(config, browser):
             elif step["class_name"] == "End":
                 browser = copy.deepcopy(config["browser_copy"][0])
                 config["feed"] = copy.deepcopy(config["feed_copy"])
+                config["next_guid"] = step["next_guids"][0]
                 #Deberia cambiar como se hace esto, y meter segun el numero de iter (dentro de la clase), que se ejecute x veces.( Deberia entrar en la misma instancia de antes, no cambiar)
             else:
-                config["output_var"][(step["param"]["save_var"]).split(".")[0]][(step["param"]["save_var"]).split(".")[1]] = result
+                config["output_var"] = config["feed"]["output_var"]
+                save_var = (step["param"]["save_var"])
+                config["output_var"][save_var.split(".")[0]][save_var.split(".")[1]] = result
             config["next_guid"] = step["next_guids"][0]
             config = stepy.del_step(config, config["feed"]["steps"])
             return config["output_var"], config["next_guid"], browser
