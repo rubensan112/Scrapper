@@ -7,30 +7,40 @@ aux=[]
 def run_step(config, browser):
     for step in config["feed"]["steps"]:
         if step["guid"] == config["guid"]:
-            current_step = getattr(stepy, step["class_name"])(config,browser)
+            if step['class_name'] == "Loop" and config['iter'] != 0:
+                current_step = getattr(stepy, step["class_name"])(config, browser)
+            else:
+                current_step = getattr(stepy, step["class_name"])(config, browser)
             result = current_step.execute(step)
             if step["class_name"] == "LoadPage" or step["class_name"] == "Start":
                 browser = result
                 config["output_var"] = "Nothing"
-            elif step["class_name"] == "Loop":
+            elif step["class_name"] == "Loop" and config['iter'] == 1:
                 config["browser_copy"].append(result[0])
                 config["feed_copy"].append(result[1])
+                config['next_guid_loop'] = step['guid']
+                config['iter'] = result[2]
+                config['number_of_nodes'] = result[3]
+            elif step["class_name"] == "Loop" and config['iter'] != 1:
+                config['iter'] = result[1]
+                print("Continuing execution. Iter: {}" .format(result[1]))
             elif step["class_name"] == "End":
                 browser = copy.deepcopy(config["browser_copy"][0])
-                config["feed"] = copy.deepcopy(config["feed_copy"])
-                config["next_guid"] = step["next_guids"][0]
+                config["feed"] = copy.deepcopy(config["feed_copy"])[0]
+                step["next_guids"][0] = config['next_guid_loop']
                 #Deberia cambiar como se hace esto, y meter segun el numero de iter (dentro de la clase), que se ejecute x veces.( Deberia entrar en la misma instancia de antes, no cambiar)
             else:
                 config["output_var"] = config["feed"]["output_var"]
                 save_var = (step["param"]["save_var"])
                 config["output_var"][save_var.split(".")[0]][save_var.split(".")[1]] = result
             config["next_guid"] = step["next_guids"][0]
-            config = stepy.del_step(config, config["feed"]["steps"])
+            #config = stepy.del_step(config, config["feed"]["steps"])
             return config["output_var"], config["next_guid"], browser
 
 def run_feed(config):
     browser = None
-    for i in range(len(config["feed"]["steps"])):
+    #for i in range(len(config["feed"]["steps"])):
+    for i in range(9999):
         if i == 0:
             config["guid"]="ffffffff-ffff-ffff-ffff-ffffffffffff"
         else:
@@ -39,6 +49,7 @@ def run_feed(config):
     return config["next_guid"]
 
 '''
+Necesito introducir mecanicas para pararlo. (Tanto el Loop como el FEED)
 Necesito hacer mas elegante el tema de que entren variables en las clases y funciones. 
 
 Necesito introducir la mecanica del End y iterloops, Extracts
@@ -65,6 +76,7 @@ Tambien podria saltarme la parte de run_feed, ya que realmente lo unico que hace
 config={}
 config["feed_copy"] = []
 config["browser_copy"] = []
+config['iter'] = 0
 config["start_time"] = time.time()
 config["feed"] = json.load(open('feed.json'),object_hook=tools._byteify)
 output_var = run_feed(config)

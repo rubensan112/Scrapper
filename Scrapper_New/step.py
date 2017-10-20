@@ -98,28 +98,50 @@ class Loop(object):
         self.feed = config["feed"]
         self.feed_copy = copy.deepcopy(config["feed"])
         self.browser_copy = copy.deepcopy(browser)
+        self.config = config
         self.iter = 0
     def execute(self,step):
         param = step['param']
-
         print("-------------------Executing %s -------------------" % (step["name"]))
-        if self.iter == 0:
-            next_guid = step['next_guids']
+        if self.config['iter'] == 0:
             browser_copy = self.browser_copy
             feed_copy = self.feed_copy
-        #if param['path']:
+            if param['path']:
+                try:
+                    expression = GenericTranslator().css_to_xpath(param['path'])
+                except SelectorError:
+                    print('Invalid selector')
+                parser = etree.HTMLParser()
+                tree = etree.parse(StringIO.StringIO(browser_copy), parser)
+                nodes = tree.xpath(expression)
+                number_of_nodes = len(nodes)
+        else:
+            number_of_nodes = self.config['number_of_nodes']
+        if self.config['iter'] <= number_of_nodes:
+            if self.config['iter'] == 0:
+                self.config['iter'] += 1
+                result = [browser_copy, feed_copy, self.config['iter'], len(nodes)]
+                return result
+            else:
+                self.config['iter'] += 1
+                result = ["Continuing Iteration", self.config['iter']]
+                return result
+        else:
+            result = "Finish Iteration",
+            return result
 
-        result = [browser_copy, feed_copy, next_guid]
 
-        return result
-
-class End(object):
-    def __init__(self,config,browser):
+class Return(object):
+    def __init__(self, config, browser):
         self.feed = config
-    def execute(self,step):
+    def execute(self, step):
         return "Nothing"
 
-
+class End(object):
+    def __init__(self, config, browser):
+        self.feed = config
+    def execute(self, step):
+        return "Nothing"
 
 
 
