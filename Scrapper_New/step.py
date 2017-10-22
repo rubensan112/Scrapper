@@ -127,7 +127,7 @@ class Loop(object):
                 result = ["Continuing Iteration", self.config['iter']]
                 return result
         else:
-            result = "Finish Iteration",
+            result = ["Finish Iteration", self.config['iter']]
             return result
 
 

@@ -179,7 +179,7 @@
       ],
       "error_handling": "ignore_and_continue",
       "param": {
-        "path": "a"
+        "path": "div"
       }
     },
       {
@@ -474,7 +474,7 @@
       ],
       "error_handling": "ignore_and_continue",
       "param": {
-        "path": "a"
+        "path": "div strong"
       }
     },
     {
