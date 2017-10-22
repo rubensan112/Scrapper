@@ -27,13 +27,17 @@ def run_step(config, browser):
             elif step["class_name"] == "Loop" and (config['iter'] - 1) == config["number_of_nodes"]:
                 config["Finish Iteration"] = True
             elif step["class_name"] == "End":
-                browser = copy.deepcopy(config["browser_copy"][0])
-                config["feed"] = copy.deepcopy(config["feed_copy"])[0]
-                if config["Finish Iteration"] == True:
-                    print("Last Iteration")
-                else:
-                    step["next_guids"][0] = config['next_guid_loop']
+                if config['iter'] != 0:
+                    browser = copy.deepcopy(config["browser_copy"][0])
+                    config["feed"] = copy.deepcopy(config["feed_copy"])[0]
+                    if config["Finish Iteration"] == True:
+                        print("Last Iteration")
+                    else:
+                        step["next_guids"][0] = config['next_guid_loop']
                 #Deberia cambiar como se hace esto, y meter segun el numero de iter (dentro de la clase), que se ejecute x veces.( Deberia entrar en la misma instancia de antes, no cambiar)
+            elif step["class_name"] == "Return":
+                config["Finish Iteration"] = True
+                return config["output_var"], config["next_guid"], browser
             else:
                 config["output_var"] = config["feed"]["output_var"]
                 save_var = (step["param"]["save_var"])
@@ -52,10 +56,9 @@ def run_feed(config):
             else:
                 config["guid"]= config["next_guid"]
             config["output_var"], config["next_guid"], browser = run_step(config, browser)
-
         else:
             print ("Finishing FEED")
-            return config #Un return interumpe un loop
+            return config['output_var'] #Un return interumpe un loop
 
 '''
 Necesito introducir mecanicas para pararlo. (Tanto el Loop como el FEED)

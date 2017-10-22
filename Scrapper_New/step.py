@@ -1,5 +1,5 @@
 import urllib2
-from lxml import cssselect, etree
+from lxml import cssselect, etree, html
 import re
 import json
 import sys
@@ -159,6 +159,7 @@ class Extract(object):
             expression = GenericTranslator().css_to_xpath(param['path'])
         except SelectorError:
             print('Invalid selector')
+        '''
         parser = etree.HTMLParser()
         tree = etree.parse(StringIO.StringIO(self.browser), parser)
         #result = [e.get('href', 'None')for e in tree.xpath(expression)]
@@ -166,9 +167,53 @@ class Extract(object):
             result = [node.text for node in tree.xpath(expression)]
         if param['path_extract_type'] == "attribute":
             result = [node.get('param.path_extract_ref') for node in tree.xpath(expression)]
-        result = tools._byteify(result[0])
+        '''
+        tree = html.fromstring(self.browser)
+        node = tree.xpath(expression)[0]
+        result = node.text + ''.join(etree.tostring(e) for e in node)
+        result = tools._byteify(result)
+        #result = etree.strip_tags(result)
+        result_def = ""
+        try:
+            tree = html.fromstring(result)
+            try:
+                print(tree[0])
+            except:
+                return result
+            for node in tree:
+                    if isinstance(node.text, str):
+                        result_def = result_def + node.text
+                    elif isinstance(node.text, unicode):
+                        result_def = result_def + tools._byteify(node.text)
+                    if isinstance(node.tail, str):
+                        result_def = result_def + node.tail
+                    elif isinstance(node.tail, unicode):
+                        result_def = result_def + tools._byteify(node.tail)
+                    else:
+                        print ("No es ni texto ni unicode")
+
+                    #result_def.append(tools._byteify(node.text + ''.join(etree.tostring(e) for e in node)))
+            return result_def
+        except:
+            return result
+
+        print result
+
+
+        ''''
+        text = ""
+        node_list = [node for node in node_list]
+
+        for node in node_list:
+            text = text + tools._byteify(node.text)
+            # text.join([`num` for num in xrange(node.text)])
+        result = text
         print(result)
         return result
+'''
+
+
+
 
 class iter(object):
     def __init__(self,config,var):
